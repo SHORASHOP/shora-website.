@@ -1,0 +1,164 @@
+shora-website/
+ ├─ package.json
+ ├─ vite.config.js
+ ├─ public/
+ │   ├─ index.html
+ │   └─ assets/
+ │        ├─ logo.png
+ │        ├─ product1.jpg
+ │        ├─ product2.jpg
+ │        ├─ hero1.mp4
+ │        ├─ hero2.mp4
+ │        └─ hero3.mp4
+ ├─ src/
+ │   ├─ main.jsx
+ │   ├─ App.jsx
+ │   └─ styles.css
+ └─ README.md
+{
+  "name": "shora-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.0.0"
+  }
+}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/assets/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shora — Luxury Aura</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App'
+import './styles.css'
+
+createRoot(document.getElementById('root')).render(<App />)
+import React, { useState } from 'react';
+
+const productsSeed = [
+  { id: 'p1', title: 'Equinox Chrono Watch', price: 249, img: '/assets/product1.jpg' },
+  { id: 'p2', title: 'Shora Luxe Bag', price: 179, img: '/assets/product2.jpg' }
+];
+
+export default function App(){
+  const [products] = useState(productsSeed);
+  const [cart, setCart] = useState({});
+  const [route, setRoute] = useState('home');
+
+  function addToCart(id, qty=1){
+    setCart(c=> ({...c, [id]: (c[id]||0)+qty}));
+    alert('Added to cart');
+  }
+
+  function renderHeader(){
+    return (
+      <div className="header container">
+        <div className="logo">
+          <img src="/assets/logo.png" alt="Shora logo" />
+          <div>
+            <div style={{fontWeight:700}}>SHORA</div>
+            <div style={{fontSize:12, color:'#0B69FF'}}>Shora — Luxury Aura</div>
+          </div>
+        </div>
+        <div>
+          <button className="btn" onClick={()=>setRoute('shop')}>Shop</button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {renderHeader()}
+      <div className="container">
+        {route==='home' && (
+          <>
+            <div className="hero card">
+              <video autoPlay muted loop>
+                <source src="/assets/hero1.mp4" type="video/mp4" />
+                <source src="/assets/hero2.mp4" type="video/mp4" />
+                <source src="/assets/hero3.mp4" type="video/mp4" />
+              </video>
+            </div>
+
+            <h2>Featured Products</h2>
+            <div className="grid products">
+              {products.map(p=>(
+                <div key={p.id} className="card">
+                  <img src={p.img} alt={p.title} />
+                  <div style={{marginTop:8, fontWeight:600}}>{p.title}</div>
+                  <div style={{color:'#475569'}}>${p.price}</div>
+                  <div style={{marginTop:8}}>
+                    <button className="btn" onClick={()=>addToCart(p.id)}>Add to cart</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {route==='shop' && (
+          <>
+            <h2>Shop</h2>
+            <div className="grid products">
+              {products.map(p=>(
+                <div key={p.id} className="card">
+                  <img src={p.img} alt={p.title} />
+                  <div style={{marginTop:8, fontWeight:600}}>{p.title}</div>
+                  <div style={{color:'#475569'}}>${p.price}</div>
+                  <div style={{marginTop:8}}>
+                    <button className="btn" onClick={()=>addToCart(p.id)}>Add to cart</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+* { box-sizing: border-box; font-family: Inter, system-ui, Arial, sans-serif; }
+body { margin:0; background: #ffffff; color:#0f1724; }
+a { color: inherit; text-decoration: none; }
+.container { max-width:1100px; margin: 0 auto; padding: 20px; }
+.header { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #e6eef9; }
+.logo { display:flex; align-items:center; gap:12px; }
+.logo img { height:44px; }
+.btn { background:#0B69FF; color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; }
+.card { border:1px solid #e6eef9; border-radius:10px; padding:12px; background:white; }
+.grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); }
+.hero { border-radius:12px; overflow:hidden; position:relative; height:380px; margin-bottom:18px; display:flex; align-items:center; justify-content:center;}
+.hero video { width:100%; height:100%; object-fit:cover; }
+.products img { width:100%; height:180px; object-fit:cover; border-radius:8px; display:block;}
+# Shora — Luxury Aura Website
+
+This is the Shora prototype website (React + Vite).
+
+## Run Locally
+1. Install [Node.js](https://nodejs.org) (v18+)
+2. Clone repo and run:
+3. Open [http://localhost:3000](http://localhost:3000)
+
+## Notes
+- This is frontend-only (demo).  
+- For production: connect a backend, add payment gateway, and deploy on Vercel/Netlify.
